@@ -6,7 +6,7 @@ import pickle
 import h5py
 import numpy as np
 from sklearn.decomposition import PCA
-from mtcnn_face import *
+from mtcnn.mtcnn import MTCNN
 # import config.config_wflw as config
 # import config.config_ibug as config
 import config.config_opendata as config
@@ -343,8 +343,7 @@ def generate_train_data_with_crop():
         noface_list = os.listdir(config.noface_data_path)
         noface_list = [n for n in noface_list if n.endswith('.jpg')]
 
-    # sava_path = os.path.join(config.data_path, 'ws/train_data_with_crop_step{}.hdf5'.format(config.active_step))
-    sava_path = os.path.join(config.data_path, 'ws/train_data_with_crop_stepxxx.hdf5')
+    sava_path = os.path.join(config.data_path, 'ws/train_data_with_crop_step{}.hdf5'.format(config.active_step))
     h5f = h5py.File(sava_path, 'w')
     h5_feature  = h5f.create_dataset('feature',  shape=(1000000, feature_size),  dtype=np.uint8,   maxshape=(None, feature_size),  chunks=(1, feature_size))
     h5_landmark = h5f.create_dataset('landmark', shape=(1000000, landmark_size), dtype=np.float32, maxshape=(None, landmark_size), chunks=(1, landmark_size))
@@ -373,9 +372,9 @@ def generate_train_data_with_crop():
             minx, maxx, miny, maxy = landmark_to_box(proposal_landmark)
             learn_target = (target_landmark - proposal_landmark) * 100.0 / (maxy - miny)
             feats = crop_feature(image, proposal_landmark, scale, resize, sample_idx, crop_size)
+
             feats = np.concatenate(feats, axis=2)
             feats = feats.flatten()
-
             landmark = np.concatenate((learn_target, proposal_landmark, target_landmark)).astype(np.float32)
             metadata = np.array([idx, 1], dtype=np.int32)
             push_hdf5_data(feats, landmark, metadata)
@@ -403,9 +402,9 @@ def generate_train_data_with_crop():
                     miny = int(round(cty - crop_size / 2))
                     feat = crop_image(roi_image, (minx, minx + crop_size, miny, miny + crop_size))
                     feats.append(feat)
+
                 feats = np.concatenate(feats, axis=2)
                 feats = feats.flatten()
-
                 landmark = np.zeros((landmark_size,), dtype=np.float32)
                 metadata = np.array([-1, 0], dtype=np.int32)
                 push_hdf5_data(feats, landmark, metadata)
@@ -421,7 +420,6 @@ def generate_train_data_with_crop():
             # mfeats = np.concatenate(mfeats, axis=1)
             # cv2.imshow('mfeats', mfeats)
             # cv2.imshow('image', image)
-            # cv2.imshow('roi_image', roi_image)
             # cv2.waitKey(0)
     
     save_path = os.path.join(config.data_path, 'ws/train_data_with_proposal_step{}.pkl'.format(config.active_step))

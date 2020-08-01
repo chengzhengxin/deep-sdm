@@ -81,21 +81,21 @@ class PNET(nn.Module):
 
         self.m1 = nn.Sequential(
                         nn.BatchNorm2d(in_channels),
-                        nn.Conv2d(in_channels, groups * dims[1], kernel_size=3, stride=1, padding=0, dilation=1, groups=groups, bias=True),
+                        nn.Conv2d(in_channels, groups * dims[1], kernel_size=3, stride=1, padding=0, groups=groups, bias=True),
                         nn.BatchNorm2d(groups * dims[1]),
                         nn.ReLU(),
                         nn.MaxPool2d(kernel_size=2)
                         )
         
         self.m2 =  nn.Sequential(
-                        nn.Conv2d(groups * dims[1], groups * dims[2], kernel_size=3, stride=1, padding=1, dilation=1, groups=groups, bias=True),
+                        nn.Conv2d(groups * dims[1], groups * dims[2], kernel_size=3, stride=1, padding=1, groups=groups, bias=True),
                         nn.BatchNorm2d(groups * dims[2]),
                         nn.ReLU(),
                         nn.MaxPool2d(kernel_size=3, stride=2)
                         )
 
         self.m3 =  nn.Sequential(
-                        nn.Conv2d(groups * dims[2], groups * dims[3], kernel_size=2, stride=1, padding=0, dilation=1, groups=groups, bias=True),
+                        nn.Conv2d(groups * dims[2], groups * dims[3], kernel_size=2, stride=1, padding=0, groups=groups, bias=True),
                         nn.ReLU()
                         )
 
@@ -120,6 +120,7 @@ class RNET(nn.Module):
         groups = len(config.step2_idx)
         in_channels = groups * 3
         dims = [3, 8, 16, 32]
+        # dims = [3, 16, 32, 64]
 
         self.m1 = nn.Sequential(
                         nn.BatchNorm2d(in_channels),

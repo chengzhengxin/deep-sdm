@@ -7,9 +7,9 @@ landmark_num = 106
 # PCA n_components
 n_components = 12
 
-data_path  = '/Volumes/DATA/data/landmark_data/106p/'
+data_path  = '../data/106p/'
 model_path = 'models/'
-noface_data_path = '/Volumes/DATA/data/landmark_data/noface'
+noface_data_path = '../data/noface'
 
 reset_idx = [2, 3, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, \
             14, 15, 16, 17, 0, 1, 48, 49, 46, 47, 44, 45, 42, 43, 40, 41, 38, 39, 36, 37, 64, 65, 62, 63, 60, 61, 58, \
@@ -45,10 +45,22 @@ step2_idx = [1, 3, 5, 8, 11, 14, 16, 18, 21, 24, 27, 29, 31, 33, 35, 37, 39, 41,
 step2_m = (0.1, 15, 0.15)
 step2_t = 2
 step2_proposal = [12]
-step2_scale = 1.5
-step2_resize = 120
-step2_crop_size = 10
 class_weight = 10.0
+
+# 0
+# step2_scale = 1.5
+# step2_resize = 120
+# step2_crop_size = 10
+
+# 1
+step2_scale = 1.2
+step2_resize = 160
+step2_crop_size = 10
+
+# 2
+# step2_scale = 1.2
+# step2_resize = 160
+# step2_crop_size = 12
 
 
 ######################## train ########################
@@ -56,7 +68,7 @@ active_step = 2
 log_interval = 100
 no_cuda = True
 seed = 1234
-batch_size = 64
+batch_size = 256
 # optimizer = 'sgd'
 optimizer = 'adam'
 learning_rate = 0.001
@@ -71,4 +83,3 @@ scale  = step1_scale if active_step == 1 else step2_scale
 resize = step1_resize if active_step == 1 else step2_resize
 crop_size  = step1_crop_size if active_step == 1 else step2_crop_size
 sample_idx = step1_idx if active_step == 1 else step2_idx
-
